@@ -37,6 +37,9 @@ REST-сервис для управления заявками на выплат
 ![Создание заявки](docs/images/create_application.png)
 ![Валидация](docs/images/validation.png)
 
+* Изменение заявки `PATCH /api/payouts/{id}/`
+![Изменение заявки](docs/images/change_application.png)
+
 * Удаление заявки `DELETE /api/payouts/{id}/`
 ![Удаление заявки](docs/images/delete_application.png)
 
