@@ -1,0 +1,71 @@
+services:
+  django:
+    image: payments-service-backend
+    container_name: payments-service-backend
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    env_file: .environment
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/code
+
+  celery-beat:
+    image: payments-service-backend
+    container_name: payments-service-backend-celery-beat
+    command: celery -A payments_service beat -l INFO --scheduler redbeat.RedBeatScheduler --max-interval 2
+    env_file: .environment
+    volumes:
+      - .:/code
+    depends_on:
+      - redis
+      - postgres-main
+
+  celery-worker-default:
+    image: payments-service-backend
+    command: celery -A payments_service worker -l INFO --concurrency=2
+    env_file: .environment
+    volumes:
+      - .:/code
+    depends_on:
+      - redis
+
+  celery-worker-payments:
+    image: payments-service-backend
+    container_name: payments-service-backend-celery-payments
+    command: celery -A payments_service worker -l INFO -Q payments --concurrency=2
+    env_file: .environment
+    volumes:
+      - .:/code
+    depends_on:
+      - redis
+
+  flower:
+    container_name: payments-service-backend-flower
+    image: payments-service-backend
+    command: celery -A payments_service flower -l DEBUG
+    volumes:
+      - .:/code
+    env_file: .environment
+    ports:
+      - "0.0.0.0:5555:5555"
+
+  redis:
+    image: redis:7.0.7-alpine
+    container_name: payments-service-redis
+    volumes:
+      - ./storage/redis:/data
+
+  postgres-main:
+    image: postgis/postgis:16-3.4-alpine
+    container_name: payments-service-postgres-main
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./storage/postgres-main:/var/lib/postgresql/data
+    env_file: .environment
+
+
+networks:
+  default:
+    name: payments-service
