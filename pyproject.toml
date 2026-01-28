@@ -29,7 +29,7 @@ extend-ignore = 'E701'
 
 [tool.pytest.ini_options]
 addopts = '-ra --new-first --failed-first --no-migrations'
-DJANGO_SETTINGS_MODULE = 'payments_service.settings.settings'
+DJANGO_SETTINGS_MODULE = 'payments_service.settings'
 filterwarnings = [
     'ignore::RuntimeWarning',
     'ignore::DeprecationWarning',

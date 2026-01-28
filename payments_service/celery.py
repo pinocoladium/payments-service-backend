@@ -5,7 +5,7 @@ from django.conf import settings
 
 
 # set the default Django settings module for the 'celery' program.
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'payments_service.settings.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'payments_service.settings')
 
 app = Celery('payments_service')
 
